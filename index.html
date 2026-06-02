@@ -1,0 +1,1142 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BLUSSOM — The Blueberry Co.</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,700;1,9..144,300;1,9..144,400&family=Syne:wght@400;700;800&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,700;1,6..96,400&family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;600&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:wght@300;400;600;800&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    /* ══════════════════════════════════════════════
+       GLOBAL NAV
+    ══════════════════════════════════════════════ */
+    #gnav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+      height: 66px; display: flex; align-items: center;
+      justify-content: space-between; padding: 0 3rem;
+      transition: background 0.4s, border-color 0.4s;
+    }
+    #gnav.theme-1 { background: rgba(245,238,255,0.92); border-bottom: 1px solid rgba(120,60,180,0.12); backdrop-filter: blur(14px); }
+    #gnav.theme-2 { background: rgba(10,8,25,0.93); border-bottom: 1px solid rgba(255,255,255,0.06); backdrop-filter: blur(14px); }
+    #gnav.theme-3 { background: rgba(255,252,245,0.93); border-bottom: 1px solid rgba(60,120,60,0.12); backdrop-filter: blur(14px); }
+
+    .nav-brand {
+      font-size: 1.35rem; font-weight: 800; letter-spacing: 0.08em; text-decoration: none;
+      transition: color 0.3s;
+    }
+    #gnav.theme-1 .nav-brand { font-family: 'Fraunces', serif; color: #4a1a8a; }
+    #gnav.theme-2 .nav-brand { font-family: 'Syne', sans-serif; color: #c8aaff; }
+    #gnav.theme-3 .nav-brand { font-family: 'Bricolage Grotesque', sans-serif; color: #1a5c1a; }
+
+    .nav-links a {
+      font-size: 0.78rem; letter-spacing: 0.16em; text-transform: uppercase;
+      text-decoration: none; margin-left: 2.2rem; padding-bottom: 3px;
+      border-bottom: 1.5px solid transparent; transition: all 0.25s;
+    }
+    #gnav.theme-1 .nav-links a { font-family: 'Outfit', sans-serif; color: #7a40b0; }
+    #gnav.theme-1 .nav-links a:hover,
+    #gnav.theme-1 .nav-links a.active { color: #4a1a8a; border-color: #7c3aed; }
+    #gnav.theme-2 .nav-links a { font-family: 'Syne', sans-serif; color: rgba(200,170,255,0.6); }
+    #gnav.theme-2 .nav-links a:hover,
+    #gnav.theme-2 .nav-links a.active { color: #e0ccff; border-color: #9966ff; }
+    #gnav.theme-3 .nav-links a { font-family: 'Bricolage Grotesque', sans-serif; color: #3a7a3a; }
+    #gnav.theme-3 .nav-links a:hover,
+    #gnav.theme-3 .nav-links a.active { color: #1a4a1a; border-color: #2a7a2a; }
+
+    /* ══════════════════════════════════════════════
+       PAGE SYSTEM
+    ══════════════════════════════════════════════ */
+    .page { display: none; min-height: 100vh; padding-top: 66px; }
+    .page.active { display: block; }
+
+    /* reveal */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.72s ease, transform 0.72s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+    .reveal-left { opacity: 0; transform: translateX(-30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal-left.visible { opacity: 1; transform: none; }
+    .reveal-right { opacity: 0; transform: translateX(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal-right.visible { opacity: 1; transform: none; }
+
+    /* ══════════════════════════════════════════════
+       PAGE 1 — "BLOOM" — Dreamy Lavender + Cream
+       Theme: soft luxury editorial, like a high-end jam brand
+       Fonts: Fraunces (display) + Outfit (body)
+    ══════════════════════════════════════════════ */
+    #page-home {
+      background: #f5eeff;
+      font-family: 'Outfit', sans-serif;
+      color: #2a0e50;
+    }
+
+    /* animated blobs */
+    .blob-bg {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 0; overflow: hidden;
+    }
+    .blob {
+      position: absolute; border-radius: 50%;
+      filter: blur(80px); opacity: 0.35;
+    }
+    .blob-1 { width: 600px; height: 600px; background: #c084fc; top: -200px; left: -200px; animation: drift1 18s ease-in-out infinite; }
+    .blob-2 { width: 500px; height: 500px; background: #818cf8; bottom: -150px; right: -100px; animation: drift2 22s ease-in-out infinite; }
+    .blob-3 { width: 350px; height: 350px; background: #f0abfc; top: 40%; left: 40%; animation: drift3 15s ease-in-out infinite; }
+    @keyframes drift1 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(80px,60px)} }
+    @keyframes drift2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-60px,-80px)} }
+    @keyframes drift3 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-40px,30px) scale(1.1)} }
+
+    .p1-wrap { position: relative; z-index: 1; }
+
+    /* hero */
+    .p1-hero {
+      min-height: calc(100vh - 66px);
+      display: grid; grid-template-columns: 1fr 1fr;
+      align-items: center; gap: 0;
+      padding: 4rem 5vw;
+    }
+    @media(max-width:768px){ .p1-hero { grid-template-columns:1fr; text-align:center; } }
+
+    .p1-eyebrow {
+      font-size: 0.72rem; letter-spacing: 0.35em; text-transform: uppercase;
+      color: #9333ea; font-weight: 600; margin-bottom: 1.2rem;
+    }
+    .p1-h1 {
+      font-family: 'Fraunces', serif; font-size: clamp(3rem,7vw,6rem);
+      font-weight: 700; line-height: 1.0; color: #2e0a6e;
+      margin-bottom: 1.5rem;
+    }
+    .p1-h1 em { font-style: italic; color: #7c3aed; }
+    .p1-lead {
+      font-size: 1.1rem; line-height: 1.8; color: #5b3285; max-width: 440px;
+      margin-bottom: 2.5rem;
+    }
+    .p1-cta-group { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+    .btn-p1-primary {
+      font-family: 'Fraunces', serif; font-size: 0.9rem; font-weight: 700;
+      letter-spacing: 0.05em; padding: 0.85rem 2.2rem;
+      background: #6d28d9; color: #fff; border: none; border-radius: 50px;
+      text-decoration: none; display: inline-block;
+      transition: background 0.25s, transform 0.2s, box-shadow 0.25s;
+      box-shadow: 0 6px 24px rgba(109,40,217,0.35);
+    }
+    .btn-p1-primary:hover { background: #5b21b6; transform: translateY(-2px); box-shadow: 0 10px 32px rgba(109,40,217,0.45); color:#fff; }
+
+    .btn-p1-ghost {
+      font-family: 'Outfit', sans-serif; font-size: 0.9rem;
+      letter-spacing: 0.06em; padding: 0.85rem 2.2rem;
+      background: transparent; color: #6d28d9;
+      border: 1.5px solid #6d28d9; border-radius: 50px;
+      text-decoration: none; display: inline-block;
+      transition: all 0.25s;
+    }
+    .btn-p1-ghost:hover { background: #6d28d9; color: #fff; }
+
+    /* berry illustration area */
+    .p1-visual {
+      display: flex; align-items: center; justify-content: center;
+      padding: 2rem;
+    }
+
+    /* SVG berry cluster */
+    .p1-berry-svg { width: min(420px, 90vw); filter: drop-shadow(0 20px 60px rgba(109,40,217,0.3)); animation: float-slow 6s ease-in-out infinite; }
+    @keyframes float-slow { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-16px)} }
+
+    /* stats strip */
+    .p1-stats {
+      background: rgba(255,255,255,0.55); backdrop-filter: blur(12px);
+      border: 1px solid rgba(124,58,237,0.12); border-radius: 20px;
+      padding: 2.5rem 3rem; margin: 0 5vw 5rem;
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 2rem;
+      text-align: center;
+    }
+    @media(max-width:600px){ .p1-stats { grid-template-columns:1fr; } }
+    .stat-num {
+      font-family: 'Fraunces', serif; font-size: 3rem; font-weight: 700;
+      color: #6d28d9; line-height: 1;
+    }
+    .stat-label { font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase; color: #9875cc; margin-top: 0.4rem; }
+
+    /* benefits section */
+    .p1-section { padding: 5rem 5vw; }
+    .p1-section-tag {
+      font-size: 0.7rem; letter-spacing: 0.35em; text-transform: uppercase;
+      color: #9333ea; font-weight: 600; margin-bottom: 0.8rem;
+    }
+    .p1-section-title {
+      font-family: 'Fraunces', serif; font-size: clamp(1.8rem,4vw,3rem);
+      color: #2e0a6e; margin-bottom: 3rem; font-weight: 700;
+    }
+    .p1-section-title em { font-style: italic; color: #7c3aed; }
+
+    .benefit-pill {
+      background: rgba(255,255,255,0.7); border: 1px solid rgba(124,58,237,0.15);
+      border-radius: 16px; padding: 1.8rem; height: 100%;
+      transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+    }
+    .benefit-pill:hover { transform: translateY(-6px); box-shadow: 0 16px 48px rgba(109,40,217,0.18); background: rgba(255,255,255,0.9); }
+    .benefit-icon { font-size: 2.2rem; margin-bottom: 1rem; display: block; }
+    .benefit-pill h4 { font-family: 'Fraunces', serif; font-size: 1.15rem; color: #3b0764; margin-bottom: 0.6rem; }
+    .benefit-pill p { font-size: 0.95rem; color: #6b4fa0; line-height: 1.7; }
+
+    /* divider */
+    .p1-divider { height: 1px; background: linear-gradient(90deg,transparent,rgba(109,40,217,0.2),transparent); margin: 0 5vw; }
+
+    /* product preview */
+    .product-card {
+      background: linear-gradient(160deg, rgba(255,255,255,0.85), rgba(245,230,255,0.7));
+      border: 1px solid rgba(124,58,237,0.13); border-radius: 20px;
+      overflow: hidden; transition: transform 0.35s, box-shadow 0.35s;
+    }
+    .product-card:hover { transform: translateY(-8px); box-shadow: 0 20px 60px rgba(109,40,217,0.2); }
+    .product-card-img { height: 200px; display: flex; align-items: center; justify-content: center; font-size: 5rem; }
+    .product-card-body { padding: 1.5rem; }
+    .product-card-body h5 { font-family: 'Fraunces', serif; font-size: 1.1rem; color: #3b0764; margin-bottom: 0.3rem; }
+    .product-card-body .product-sub { font-size: 0.8rem; color: #9875cc; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.8rem; }
+    .product-card-body .price { font-family: 'Fraunces', serif; font-size: 1.3rem; color: #6d28d9; font-weight: 700; }
+
+    /* footer */
+    .p1-footer { background: #1e0a3c; color: #c4a8e8; padding: 3rem 5vw; text-align: center; }
+    .p1-footer .brand { font-family: 'Fraunces', serif; font-size: 2rem; font-weight: 700; color: #e9d5ff; margin-bottom: 0.5rem; }
+    .p1-footer p { font-size: 0.85rem; color: #6b3fa8; margin-top: 1.5rem; }
+
+
+    /* ══════════════════════════════════════════════
+       PAGE 2 — "NIGHT HARVEST" — Deep Midnight + Electric
+       Theme: dark luxury, moody editorial, nighttime blueberry fields
+       Fonts: Syne (display) + Libre Baskerville (body)
+    ══════════════════════════════════════════════ */
+    #page-harvest {
+      background: #06040f;
+      font-family: 'Libre Baskerville', serif;
+      color: #d4c8f0;
+    }
+
+    .p2-star-field {
+      position: fixed; top:0; left:0; width:100%; height:100%;
+      pointer-events:none; z-index:0; overflow:hidden;
+    }
+    .star { position:absolute; border-radius:50%; background:#fff; animation: twinkle linear infinite; }
+    @keyframes twinkle { 0%,100%{opacity:0.1} 50%{opacity:0.9} }
+
+    .p2-wrap { position: relative; z-index: 1; }
+
+    .p2-hero {
+      min-height: calc(100vh - 66px);
+      display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
+      padding: 4rem 8vw;
+      background: radial-gradient(ellipse 90% 70% at 70% 60%, rgba(80,20,180,0.25) 0%, transparent 65%),
+                  radial-gradient(ellipse 60% 50% at 20% 30%, rgba(30,10,80,0.4) 0%, transparent 60%);
+      position: relative; overflow: hidden;
+    }
+
+    .p2-eyebrow {
+      font-family: 'Syne', sans-serif; font-size: 0.68rem;
+      letter-spacing: 0.45em; text-transform: uppercase; color: #8866cc;
+      margin-bottom: 1.5rem;
+    }
+    .p2-h1 {
+      font-family: 'Syne', sans-serif; font-size: clamp(3rem,8vw,7rem);
+      font-weight: 800; line-height: 0.92; letter-spacing: -0.02em;
+      color: #fff; margin-bottom: 2rem;
+    }
+    .p2-h1 .accent { color: #9d5cff; display: block; }
+    .p2-h1 .small-word { font-size: 0.5em; font-weight: 400; color: rgba(255,255,255,0.35); letter-spacing: 0.1em; }
+
+    .p2-lead { font-size: 1rem; line-height: 1.9; color: #9485b8; max-width: 480px; margin-bottom: 3rem; font-style: italic; }
+
+    .btn-p2 {
+      font-family: 'Syne', sans-serif; font-size: 0.82rem; font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      padding: 0.9rem 2.6rem; background: transparent;
+      border: 1px solid rgba(157,92,255,0.5); color: #c8aaff;
+      text-decoration: none; display: inline-block;
+      transition: all 0.3s; position: relative; overflow: hidden;
+    }
+    .btn-p2::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(100,50,200,0.4), rgba(50,0,120,0.4));
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .btn-p2:hover { color: #fff; border-color: #9d5cff; }
+    .btn-p2:hover::before { opacity: 1; }
+
+    /* large decorative berry */
+    .p2-hero-berry {
+      position: absolute; right: 6vw; top: 50%; transform: translateY(-50%);
+      font-size: min(38vw, 340px); line-height: 1; opacity: 0.08;
+      animation: slow-spin 40s linear infinite; user-select: none;
+    }
+    @media(max-width:768px){ .p2-hero-berry { display: none; } }
+    @keyframes slow-spin { 0%{transform:translateY(-50%) rotate(0)} 100%{transform:translateY(-50%) rotate(360deg)} }
+
+    /* horizontal marquee */
+    .p2-marquee-wrap {
+      overflow: hidden; border-top: 1px solid rgba(255,255,255,0.06);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 1rem 0; background: rgba(20,10,50,0.5);
+    }
+    .p2-marquee-track {
+      display: flex; width: max-content;
+      animation: marquee 22s linear infinite;
+    }
+    @keyframes marquee { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+    .p2-marquee-item {
+      font-family: 'Syne', sans-serif; font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 0.35em; text-transform: uppercase;
+      color: rgba(180,150,255,0.35); padding: 0 2rem; white-space: nowrap;
+    }
+    .p2-marquee-item span { color: #6633aa; margin: 0 1rem; }
+
+    /* grid features */
+    .p2-section { padding: 6rem 5vw; }
+    .p2-section-label {
+      font-family: 'Syne', sans-serif; font-size: 0.68rem;
+      letter-spacing: 0.4em; text-transform: uppercase; color: #5533aa; margin-bottom: 0.8rem;
+    }
+    .p2-section-title {
+      font-family: 'Syne', sans-serif; font-size: clamp(1.8rem,4vw,3.2rem);
+      font-weight: 800; color: #fff; margin-bottom: 3.5rem; line-height: 1.1;
+    }
+    .p2-section-title .hi { color: #9d5cff; }
+
+    .p2-feat-card {
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+      padding: 2.5rem 2rem; height: 100%;
+      transition: background 0.3s, border-color 0.3s, transform 0.3s;
+      position: relative; overflow: hidden;
+    }
+    .p2-feat-card::after {
+      content:''; position:absolute; top:0; left:0; right:0; height:2px;
+      background: linear-gradient(90deg, transparent, #7c3aed, transparent);
+      opacity:0; transition: opacity 0.3s;
+    }
+    .p2-feat-card:hover { background: rgba(80,40,160,0.12); border-color: rgba(124,58,237,0.3); transform: translateY(-4px); }
+    .p2-feat-card:hover::after { opacity: 1; }
+    .p2-feat-num {
+      font-family: 'Syne', sans-serif; font-size: 3.5rem; font-weight: 800;
+      color: rgba(157,92,255,0.15); line-height: 1; margin-bottom: 1rem; display: block;
+    }
+    .p2-feat-card h4 { font-family: 'Syne', sans-serif; font-size: 1.05rem; font-weight: 700; color: #e0d0ff; margin-bottom: 0.8rem; }
+    .p2-feat-card p { font-size: 0.92rem; line-height: 1.8; color: #6a5a90; }
+
+    /* full-bleed quote */
+    .p2-quote-section {
+      padding: 6rem 5vw;
+      background: linear-gradient(135deg, rgba(40,10,100,0.5), rgba(10,5,30,0.6));
+      border-top: 1px solid rgba(255,255,255,0.05);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      text-align: center;
+    }
+    .p2-big-quote {
+      font-family: 'Libre Baskerville', serif; font-style: italic;
+      font-size: clamp(1.5rem,3.5vw,2.6rem); color: rgba(255,255,255,0.8);
+      line-height: 1.5; max-width: 800px; margin: 0 auto;
+    }
+    .p2-big-quote em { color: #9d5cff; font-style: normal; }
+    .p2-cite { font-family: 'Syne', sans-serif; font-size: 0.72rem; letter-spacing: 0.3em; text-transform: uppercase; color: #4a3080; margin-top: 2rem; }
+
+    /* nutrition table */
+    .p2-table { width: 100%; border-collapse: collapse; }
+    .p2-table th { font-family: 'Syne', sans-serif; font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: #5533aa; padding: 0.8rem 1rem; border-bottom: 1px solid rgba(255,255,255,0.07); text-align: left; }
+    .p2-table td { padding: 0.9rem 1rem; border-bottom: 1px solid rgba(255,255,255,0.04); color: #9485b8; font-size: 0.9rem; }
+    .p2-table tr:hover td { background: rgba(80,40,160,0.1); color: #c8aaff; }
+    .p2-table td:first-child { color: #d4c8f0; }
+    .p2-table td:last-child { color: #7c3aed; font-family: 'Syne', sans-serif; font-weight: 700; }
+
+    /* p2 footer */
+    .p2-footer {
+      background: #030008; padding: 3rem 5vw; text-align: center;
+      border-top: 1px solid rgba(80,40,160,0.2);
+    }
+    .p2-footer .brand { font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 800; color: #6633aa; }
+    .p2-footer p { font-size: 0.82rem; color: #2a1a50; margin-top: 1.5rem; }
+
+
+    /* ══════════════════════════════════════════════
+       PAGE 3 — "WILD FIELD" — Organic Sage + Cream
+       Theme: artisanal farmers-market, printed label feel
+       Fonts: Bricolage Grotesque (display) + Lora (body)
+    ══════════════════════════════════════════════ */
+    #page-wild {
+      background: #f8f4ec;
+      font-family: 'Lora', serif;
+      color: #2c1f0e;
+    }
+
+    /* subtle grain */
+    #page-wild::before {
+      content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.4;
+    }
+
+    .p3-wrap { position: relative; z-index: 1; }
+
+    .p3-hero {
+      min-height: calc(100vh - 66px);
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 0; align-items: stretch;
+    }
+    @media(max-width:768px){ .p3-hero { grid-template-columns:1fr; } }
+
+    .p3-hero-text {
+      padding: 5rem 4vw 4rem 6vw;
+      background: #f8f4ec;
+      display: flex; flex-direction: column; justify-content: center;
+    }
+    .p3-eyebrow {
+      font-family: 'Bricolage Grotesque', sans-serif; font-size: 0.68rem;
+      letter-spacing: 0.35em; text-transform: uppercase; color: #5a8a3a;
+      font-weight: 600; margin-bottom: 1.5rem;
+    }
+    .p3-h1 {
+      font-family: 'Bricolage Grotesque', sans-serif; font-size: clamp(2.8rem,5.5vw,5rem);
+      font-weight: 800; line-height: 1.0; color: #1a3010;
+      margin-bottom: 1.5rem; letter-spacing: -0.02em;
+    }
+    .p3-h1 .berry { color: #3a6a8a; }
+    .p3-h1 .wild { display: block; color: #4a8a2a; }
+    .p3-lead { font-size: 1.05rem; line-height: 1.85; color: #5c4030; max-width: 420px; margin-bottom: 2.5rem; }
+
+    .btn-p3 {
+      font-family: 'Bricolage Grotesque', sans-serif; font-size: 0.85rem;
+      font-weight: 600; letter-spacing: 0.08em; padding: 0.9rem 2.2rem;
+      background: #2a5a1a; color: #e8f0e0; border: none;
+      border-radius: 4px; text-decoration: none; display: inline-block;
+      transition: background 0.25s, transform 0.2s;
+    }
+    .btn-p3:hover { background: #1e4212; color: #f0f8e8; transform: translateY(-2px); }
+
+    .btn-p3-outline {
+      font-family: 'Bricolage Grotesque', sans-serif; font-size: 0.85rem;
+      font-weight: 600; letter-spacing: 0.08em; padding: 0.9rem 2.2rem;
+      background: transparent; color: #2a5a1a;
+      border: 1.5px solid #2a5a1a; border-radius: 4px;
+      text-decoration: none; display: inline-block;
+      transition: all 0.25s;
+    }
+    .btn-p3-outline:hover { background: #2a5a1a; color: #e8f0e0; }
+
+    .p3-hero-visual {
+      background: linear-gradient(160deg, #d4e8c8 0%, #a8c890 50%, #7aaa5a 100%);
+      display: flex; align-items: center; justify-content: center;
+      padding: 3rem; position: relative; overflow: hidden;
+      min-height: 60vmin;
+    }
+    .p3-circle-deco {
+      position: absolute; border-radius: 50%; border: 1px solid rgba(255,255,255,0.3);
+    }
+    .p3-circle-1 { width: 400px; height: 400px; top: -100px; right: -100px; }
+    .p3-circle-2 { width: 250px; height: 250px; bottom: -50px; left: -50px; }
+
+    .p3-big-berry { font-size: min(30vw,280px); filter: drop-shadow(0 20px 40px rgba(0,0,0,0.2)); animation: wobble 7s ease-in-out infinite; user-select: none; }
+    @keyframes wobble { 0%,100%{transform:rotate(-3deg) scale(1)} 50%{transform:rotate(3deg) scale(1.04)} }
+
+    /* seasonal label band */
+    .p3-band {
+      background: #2a5a1a; color: #c8e0b0; text-align: center;
+      padding: 1rem; font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 0.72rem; letter-spacing: 0.35em; text-transform: uppercase; font-weight: 600;
+    }
+    .p3-band span { color: rgba(200,224,176,0.4); margin: 0 1.5rem; }
+
+    /* farm section */
+    .p3-section { padding: 5rem 6vw; }
+    .p3-section-tag {
+      font-family: 'Bricolage Grotesque', sans-serif; font-size: 0.68rem;
+      letter-spacing: 0.35em; text-transform: uppercase; color: #5a8a3a;
+      font-weight: 600; margin-bottom: 0.8rem;
+    }
+    .p3-section-title {
+      font-family: 'Bricolage Grotesque', sans-serif; font-size: clamp(1.8rem,4vw,3rem);
+      font-weight: 800; color: #1a3010; margin-bottom: 0.5rem; letter-spacing: -0.01em;
+    }
+    .p3-section-sub { font-size: 1rem; color: #6a5040; font-style: italic; margin-bottom: 3rem; }
+
+    /* recipe cards */
+    .recipe-card {
+      background: #fff; border: 1px solid rgba(60,100,40,0.12);
+      border-radius: 8px; overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .recipe-card:hover { transform: translateY(-6px); box-shadow: 0 16px 48px rgba(40,80,20,0.12); }
+    .recipe-card-img {
+      height: 160px; display: flex; align-items: center; justify-content: center;
+      font-size: 4.5rem;
+    }
+    .recipe-card-body { padding: 1.3rem 1.5rem 1.5rem; }
+    .recipe-tag {
+      font-family: 'Bricolage Grotesque', sans-serif; font-size: 0.65rem;
+      letter-spacing: 0.2em; text-transform: uppercase; color: #5a8a3a;
+      font-weight: 600; margin-bottom: 0.5rem;
+    }
+    .recipe-card-body h5 { font-family: 'Bricolage Grotesque', sans-serif; font-size: 1.05rem; font-weight: 700; color: #1a3010; margin-bottom: 0.4rem; }
+    .recipe-card-body p { font-size: 0.9rem; color: #7a6050; line-height: 1.65; }
+    .recipe-time { font-family: 'Bricolage Grotesque', sans-serif; font-size: 0.75rem; color: #9a8070; margin-top: 0.8rem; }
+
+    /* zigzag border */
+    .p3-zigzag {
+      height: 24px;
+      background:
+        linear-gradient(135deg, #f8f4ec 25%, transparent 25%) -12px 0,
+        linear-gradient(225deg, #f8f4ec 25%, transparent 25%) -12px 0,
+        linear-gradient(315deg, #f8f4ec 25%, transparent 25%),
+        linear-gradient(45deg, #f8f4ec 25%, transparent 25%);
+      background-size: 24px 24px;
+      background-color: #2a5a1a;
+    }
+
+    /* testimonials */
+    .p3-testimonial {
+      background: rgba(255,255,255,0.7); border-left: 3px solid #5a8a3a;
+      padding: 1.5rem 1.8rem; margin-bottom: 1.5rem;
+      transition: border-color 0.3s;
+    }
+    .p3-testimonial:hover { border-left-color: #2a5a1a; }
+    .p3-testimonial p { font-style: italic; font-size: 0.98rem; color: #4a3828; line-height: 1.8; margin-bottom: 0.8rem; }
+    .p3-testimonial .reviewer { font-family: 'Bricolage Grotesque', sans-serif; font-size: 0.78rem; font-weight: 600; color: #5a8a3a; letter-spacing: 0.1em; text-transform: uppercase; }
+
+    /* farm feature split */
+    .p3-farm-split { background: #eef5e8; padding: 5rem 6vw; }
+    .p3-farm-pill {
+      background: rgba(255,255,255,0.8); border-radius: 8px;
+      padding: 1.5rem; display: flex; gap: 1rem; align-items: flex-start;
+      margin-bottom: 1rem; border: 1px solid rgba(80,140,40,0.1);
+      transition: transform 0.25s;
+    }
+    .p3-farm-pill:hover { transform: translateX(6px); }
+    .p3-farm-pill .icon { font-size: 1.8rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .p3-farm-pill h6 { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; color: #1a3010; margin-bottom: 0.2rem; font-size: 0.95rem; }
+    .p3-farm-pill p { font-size: 0.88rem; color: #6a5040; margin: 0; line-height: 1.6; }
+
+    /* p3 footer */
+    .p3-footer { background: #1a3010; color: #8ab878; padding: 3rem 6vw; text-align: center; }
+    .p3-footer .brand { font-family: 'Bricolage Grotesque', sans-serif; font-size: 2rem; font-weight: 800; color: #c8e0b0; letter-spacing: -0.02em; }
+    .p3-footer p { font-size: 0.82rem; color: #3a6020; margin-top: 1.5rem; }
+
+    /* ── RESPONSIVE NAV ── */
+    @media(max-width:640px){
+      #gnav { padding: 0 1.2rem; }
+      .nav-links a { margin-left: 1rem; font-size: 0.68rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════ GLOBAL NAV ══════════════ -->
+<header id="gnav" class="theme-1">
+  <a href="#" class="nav-brand" id="nav-brand">BLUSSOM</a>
+  <nav class="nav-links">
+    <a href="#" class="active" data-page="home">Home</a>
+    <a href="#" data-page="harvest">Night Harvest</a>
+    <a href="#" data-page="wild">Wild Field</a>
+  </nav>
+</header>
+
+
+<!-- ══════════════════════════════════════════════
+     PAGE 1 — BLOOM
+══════════════════════════════════════════════ -->
+<div id="page-home" class="page active">
+  <div class="blob-bg">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+  <div class="p1-wrap">
+
+    <!-- Hero -->
+    <section class="p1-hero">
+      <div>
+        <p class="p1-eyebrow">Single-Origin · Antioxidant Rich</p>
+        <h1 class="p1-h1">Tiny berries,<br><em>tremendous</em><br>power.</h1>
+        <p class="p1-lead">Hand-harvested from misty highland fields at peak ripeness. Every blueberry carries decades of patient cultivation and a flavour that cities simply can't manufacture.</p>
+        <div class="p1-cta-group">
+          <a href="#" class="btn-p1-primary" data-page="harvest" onclick="navTo(event,'harvest')">Explore Harvest</a>
+          <a href="#" class="btn-p1-ghost" data-page="wild" onclick="navTo(event,'wild')">Wild Field</a>
+        </div>
+      </div>
+      <div class="p1-visual">
+        <!-- Blueberry cluster SVG -->
+        <svg class="p1-berry-svg" viewBox="0 0 420 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Leaves -->
+          <ellipse cx="210" cy="370" rx="100" ry="22" fill="#7c3aed" opacity="0.08"/>
+          <path d="M180 340 Q155 290 170 260 Q190 240 200 280 Q195 310 180 340Z" fill="#6d28d9" opacity="0.25"/>
+          <path d="M240 335 Q265 285 250 255 Q230 235 220 275 Q225 305 240 335Z" fill="#6d28d9" opacity="0.2"/>
+          <path d="M210 330 Q195 280 205 250 Q215 230 225 265 Q220 295 210 330Z" fill="#7c3aed" opacity="0.22"/>
+          <!-- Main stem -->
+          <line x1="210" y1="330" x2="210" y2="290" stroke="#6d28d9" stroke-width="3" opacity="0.4"/>
+          <!-- Berry group — main cluster -->
+          <!-- Berry 1 (large center) -->
+          <circle cx="210" cy="210" r="65" fill="url(#b1grad)"/>
+          <circle cx="210" cy="210" r="65" fill="url(#b1shine)" opacity="0.6"/>
+          <ellipse cx="230" cy="185" rx="18" ry="12" fill="rgba(255,255,255,0.15)" transform="rotate(-20 230 185)"/>
+          <!-- Berry crown -->
+          <path d="M198 150 Q210 143 222 150 Q218 158 210 156 Q202 158 198 150Z" fill="#4a1a8a" opacity="0.7"/>
+          <!-- Berry 2 (left) -->
+          <circle cx="140" cy="240" r="48" fill="url(#b2grad)"/>
+          <circle cx="140" cy="240" r="48" fill="url(#b2shine)" opacity="0.5"/>
+          <ellipse cx="155" cy="220" rx="13" ry="8" fill="rgba(255,255,255,0.15)" transform="rotate(-20 155 220)"/>
+          <path d="M131 196 Q140 190 149 196 Q146 203 140 201 Q134 203 131 196Z" fill="#3b1575" opacity="0.7"/>
+          <!-- Berry 3 (right) -->
+          <circle cx="278" cy="245" r="50" fill="url(#b3grad)"/>
+          <circle cx="278" cy="245" r="50" fill="url(#b3shine)" opacity="0.5"/>
+          <ellipse cx="293" cy="225" rx="14" ry="9" fill="rgba(255,255,255,0.15)" transform="rotate(-20 293 225)"/>
+          <path d="M269 199 Q278 193 287 199 Q284 206 278 204 Q272 206 269 199Z" fill="#3b1575" opacity="0.7"/>
+          <!-- Berry 4 (top left small) -->
+          <circle cx="158" cy="168" r="35" fill="url(#b4grad)"/>
+          <circle cx="158" cy="168" r="35" fill="url(#b4shine)" opacity="0.5"/>
+          <ellipse cx="168" cy="154" rx="10" ry="6" fill="rgba(255,255,255,0.15)" transform="rotate(-20 168 154)"/>
+          <path d="M151 136 Q158 131 165 136 Q163 142 158 140 Q153 142 151 136Z" fill="#3b1575" opacity="0.6"/>
+          <!-- Berry 5 (top right small) -->
+          <circle cx="262" cy="163" r="33" fill="url(#b5grad)"/>
+          <circle cx="262" cy="163" r="33" fill="url(#b5shine)" opacity="0.5"/>
+          <ellipse cx="272" cy="149" rx="9" ry="5.5" fill="rgba(255,255,255,0.15)" transform="rotate(-20 272 149)"/>
+          <path d="M255 133 Q262 128 269 133 Q267 139 262 137 Q257 139 255 133Z" fill="#3b1575" opacity="0.6"/>
+          <!-- Tiny detail berries -->
+          <circle cx="194" cy="296" r="20" fill="url(#b4grad)" opacity="0.8"/>
+          <circle cx="228" cy="292" r="16" fill="url(#b5grad)" opacity="0.8"/>
+          <!-- Dew drops -->
+          <ellipse cx="190" cy="225" rx="4" ry="6" fill="rgba(255,255,255,0.4)" transform="rotate(15 190 225)"/>
+          <ellipse cx="330" cy="260" rx="3" ry="5" fill="rgba(255,255,255,0.3)" transform="rotate(10 330 260)"/>
+
+          <defs>
+            <radialGradient id="b1grad" cx="38%" cy="32%" r="65%">
+              <stop offset="0%" stop-color="#6d28d9"/>
+              <stop offset="55%" stop-color="#4c1d95"/>
+              <stop offset="100%" stop-color="#2e1065"/>
+            </radialGradient>
+            <radialGradient id="b1shine" cx="40%" cy="30%" r="45%">
+              <stop offset="0%" stop-color="#c084fc" stop-opacity="0.5"/>
+              <stop offset="100%" stop-color="transparent"/>
+            </radialGradient>
+            <radialGradient id="b2grad" cx="38%" cy="32%" r="65%">
+              <stop offset="0%" stop-color="#5b21b6"/>
+              <stop offset="55%" stop-color="#3b1575"/>
+              <stop offset="100%" stop-color="#1e0a4a"/>
+            </radialGradient>
+            <radialGradient id="b2shine" cx="40%" cy="30%" r="45%">
+              <stop offset="0%" stop-color="#a78bfa" stop-opacity="0.5"/>
+              <stop offset="100%" stop-color="transparent"/>
+            </radialGradient>
+            <radialGradient id="b3grad" cx="38%" cy="32%" r="65%">
+              <stop offset="0%" stop-color="#7c3aed"/>
+              <stop offset="55%" stop-color="#5b21b6"/>
+              <stop offset="100%" stop-color="#2e1065"/>
+            </radialGradient>
+            <radialGradient id="b3shine" cx="40%" cy="30%" r="45%">
+              <stop offset="0%" stop-color="#ddd6fe" stop-opacity="0.5"/>
+              <stop offset="100%" stop-color="transparent"/>
+            </radialGradient>
+            <radialGradient id="b4grad" cx="38%" cy="32%" r="65%">
+              <stop offset="0%" stop-color="#4c1d95"/>
+              <stop offset="100%" stop-color="#1e0a4a"/>
+            </radialGradient>
+            <radialGradient id="b4shine" cx="40%" cy="30%" r="45%">
+              <stop offset="0%" stop-color="#c4b5fd" stop-opacity="0.4"/>
+              <stop offset="100%" stop-color="transparent"/>
+            </radialGradient>
+            <radialGradient id="b5grad" cx="38%" cy="32%" r="65%">
+              <stop offset="0%" stop-color="#6d28d9"/>
+              <stop offset="100%" stop-color="#3b1575"/>
+            </radialGradient>
+            <radialGradient id="b5shine" cx="40%" cy="30%" r="45%">
+              <stop offset="0%" stop-color="#ede9fe" stop-opacity="0.4"/>
+              <stop offset="100%" stop-color="transparent"/>
+            </radialGradient>
+          </defs>
+        </svg>
+      </div>
+    </section>
+
+    <!-- Stats -->
+    <div class="p1-stats reveal">
+      <div>
+        <div class="stat-num">100%</div>
+        <div class="stat-label">Organic Certified</div>
+      </div>
+      <div>
+        <div class="stat-num">28+</div>
+        <div class="stat-label">Antioxidant Varieties</div>
+      </div>
+      <div>
+        <div class="stat-num">6th</div>
+        <div class="stat-label">Generation Farmers</div>
+      </div>
+    </div>
+
+    <div class="p1-divider"></div>
+
+    <!-- Benefits -->
+    <section class="p1-section">
+      <p class="p1-section-tag">Why Blueberries</p>
+      <h2 class="p1-section-title">Nature's most <em>complete</em> berry</h2>
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-3 reveal">
+          <div class="benefit-pill">
+            <span class="benefit-icon">🫐</span>
+            <h4>Anthocyanins</h4>
+            <p>The deep blue pigment carries potent anti-inflammatory compounds that protect cells from oxidative damage.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3 reveal">
+          <div class="benefit-pill">
+            <span class="benefit-icon">🧠</span>
+            <h4>Brain Health</h4>
+            <p>Flavonoids in blueberries improve neuron signalling, linked in studies to better memory and delayed cognitive aging.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3 reveal">
+          <div class="benefit-pill">
+            <span class="benefit-icon">❤️</span>
+            <h4>Heart Support</h4>
+            <p>Regular consumption is associated with lower blood pressure and reduced LDL oxidation in peer-reviewed research.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3 reveal">
+          <div class="benefit-pill">
+            <span class="benefit-icon">⚡</span>
+            <h4>Low Glycaemic</h4>
+            <p>Despite natural sweetness, blueberries rank low on the glycaemic index — delivering energy without the spike.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="p1-divider"></div>
+
+    <!-- Products -->
+    <section class="p1-section">
+      <p class="p1-section-tag">Our Range</p>
+      <h2 class="p1-section-title">Fresh, Frozen & <em>Preserved</em></h2>
+      <div class="row g-4">
+        <div class="col-md-4 reveal">
+          <div class="product-card">
+            <div class="product-card-img" style="background:linear-gradient(135deg,#ede9fe,#ddd6fe);">🫐</div>
+            <div class="product-card-body">
+              <div class="product-sub">Fresh · Seasonal</div>
+              <h5>Highland Fresh Punnet</h5>
+              <div class="price">£4.50</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 reveal">
+          <div class="product-card">
+            <div class="product-card-img" style="background:linear-gradient(135deg,#f3e8ff,#e9d5ff);">🍯</div>
+            <div class="product-card-body">
+              <div class="product-sub">Preserve · Year-round</div>
+              <h5>Wild Berry Conserve</h5>
+              <div class="price">£6.80</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 reveal">
+          <div class="product-card">
+            <div class="product-card-img" style="background:linear-gradient(135deg,#ede9fe,#c4b5fd);">🧃</div>
+            <div class="product-card-body">
+              <div class="product-sub">Pressed · Cold</div>
+              <h5>Cold-Press Berry Juice</h5>
+              <div class="price">£5.20</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="p1-footer">
+      <div class="brand">BLUSSOM</div>
+      <div style="font-size:0.82rem;color:#7c3aed;letter-spacing:0.2em;margin-top:0.3rem;">THE BLUEBERRY CO.</div>
+      <p>© 2026 Blussom · Grown with care · All rights reserved</p>
+    </footer>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     PAGE 2 — NIGHT HARVEST
+══════════════════════════════════════════════ -->
+<div id="page-harvest" class="page">
+  <div class="p2-star-field" id="star-field"></div>
+  <div class="p2-wrap">
+
+    <!-- Hero -->
+    <section class="p2-hero">
+      <div class="p2-hero-berry" aria-hidden="true">🫐</div>
+      <p class="p2-eyebrow">Night Harvest Edition · Est. 1948</p>
+      <h1 class="p2-h1">
+        <span class="small-word">THE</span>
+        BLUE<span class="accent">BERRY</span>
+        EDIT
+      </h1>
+      <p class="p2-lead">When the sun dips below the ridge and the field temperature drops, the sugars concentrate. We harvest by hand in the last hour of light — and that is the only hour that matters.</p>
+      <a href="#" class="btn-p2">Discover the Origin</a>
+    </section>
+
+    <!-- Marquee -->
+    <div class="p2-marquee-wrap">
+      <div class="p2-marquee-track" id="marquee-track">
+        <!-- items injected by JS -->
+      </div>
+    </div>
+
+    <!-- Features grid -->
+    <section class="p2-section">
+      <p class="p2-section-label">What Makes Us Different</p>
+      <h2 class="p2-section-title">Obsessive about <span class="hi">every detail</span></h2>
+      <div class="row g-3">
+        <div class="col-md-6 col-lg-3 reveal">
+          <div class="p2-feat-card">
+            <span class="p2-feat-num">01</span>
+            <h4>Altitude Selection</h4>
+            <p>Only berries grown above 800m elevation qualify. The cold nights create tighter skins and more concentrated flavour compounds.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3 reveal">
+          <div class="p2-feat-card">
+            <span class="p2-feat-num">02</span>
+            <h4>72-Hour Cold Chain</h4>
+            <p>From branch to your door within 72 hours. Every stage is temperature-controlled to lock in polyphenol content and freshness.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3 reveal">
+          <div class="p2-feat-card">
+            <span class="p2-feat-num">03</span>
+            <h4>Zero Spray Program</h4>
+            <p>Our fields operate without synthetic pesticides. Beneficial insects are the only pest management — and they work better than chemistry.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3 reveal">
+          <div class="p2-feat-card">
+            <span class="p2-feat-num">04</span>
+            <h4>Terroir Certification</h4>
+            <p>Soil composition, rainfall, and microclimate data is published annually. You can read the field conditions behind every batch.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Full-bleed quote -->
+    <section class="p2-quote-section reveal">
+      <p class="p2-big-quote">"The difference between a supermarket blueberry and ours is the difference between <em>recorded music</em> and a live performance — technically the same notes, but not even close."</p>
+      <p class="p2-cite">— Maeve Callahan, Head Grower · Blussom Farm, County Kerry</p>
+    </section>
+
+    <!-- Nutrition table -->
+    <section class="p2-section">
+      <p class="p2-section-label">Nutritional Profile</p>
+      <h2 class="p2-section-title">Per 100g serving</h2>
+      <div class="row">
+        <div class="col-lg-7 reveal">
+          <table class="p2-table">
+            <thead>
+              <tr>
+                <th>Nutrient</th>
+                <th>Amount</th>
+                <th>% Daily Value</th>
+                <th>Grade</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Vitamin C</td><td>9.7 mg</td><td>11%</td><td>★★★★</td></tr>
+              <tr><td>Vitamin K</td><td>19 µg</td><td>16%</td><td>★★★★★</td></tr>
+              <tr><td>Manganese</td><td>0.34 mg</td><td>17%</td><td>★★★★★</td></tr>
+              <tr><td>Dietary Fibre</td><td>2.4 g</td><td>9%</td><td>★★★★</td></tr>
+              <tr><td>Anthocyanins</td><td>163 mg</td><td>—</td><td>★★★★★</td></tr>
+              <tr><td>Quercetin</td><td>7.7 mg</td><td>—</td><td>★★★★</td></tr>
+              <tr><td>Calories</td><td>57 kcal</td><td>3%</td><td>★★★★★</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-lg-5 ps-lg-5 reveal-right" style="display:flex;align-items:center;justify-content:center;padding-top:2rem;">
+          <div style="text-align:center;">
+            <div style="font-size:min(22vw,200px);line-height:1;filter:drop-shadow(0 0 40px rgba(157,92,255,0.4));">🫐</div>
+            <p style="font-family:'Syne',sans-serif;font-size:0.68rem;letter-spacing:0.35em;text-transform:uppercase;color:#4a3080;margin-top:1rem;">One handful = extraordinary</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="p2-footer">
+      <div class="brand">BLUSSOM</div>
+      <div style="font-family:'Syne',sans-serif;font-size:0.68rem;letter-spacing:0.35em;text-transform:uppercase;color:#3a1a60;margin-top:0.3rem;">NIGHT HARVEST EDITION</div>
+      <p>© 2026 Blussom · Grown in darkness, delivered in light</p>
+    </footer>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     PAGE 3 — WILD FIELD
+══════════════════════════════════════════════ -->
+<div id="page-wild" class="page">
+  <div class="p3-wrap">
+
+    <!-- Hero split -->
+    <section class="p3-hero">
+      <div class="p3-hero-text">
+        <p class="p3-eyebrow">Certified Organic · Wild-Harvested</p>
+        <h1 class="p3-h1">
+          <span class="berry">Blue</span>berries
+          <span class="wild">as nature</span>
+          intended.
+        </h1>
+        <p class="p3-lead">No polytunnels. No forced growth. Just acid-rich soil, Atlantic rainfall, and time. Our wild field blueberries take three extra weeks to ripen — and every single day is worth it.</p>
+        <div class="d-flex gap-3 flex-wrap">
+          <a href="#" class="btn-p3">Shop Wild Range</a>
+          <a href="#" class="btn-p3-outline" onclick="navTo(event,'home')">Back to Bloom</a>
+        </div>
+      </div>
+      <div class="p3-hero-visual">
+        <div class="p3-circle-deco p3-circle-1"></div>
+        <div class="p3-circle-deco p3-circle-2"></div>
+        <div class="p3-big-berry">🫐</div>
+      </div>
+    </section>
+
+    <!-- Band -->
+    <div class="p3-band">
+      Season Open: July — September <span>✦</span> Wild Harvest Only <span>✦</span> Limited Quantities <span>✦</span> Order Ahead
+    </div>
+
+    <!-- Recipes section -->
+    <section class="p3-section">
+      <p class="p3-section-tag">From Our Kitchen</p>
+      <h2 class="p3-section-title">Seasonal Recipes</h2>
+      <p class="p3-section-sub">Simple preparations that let the berry speak</p>
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-4 reveal">
+          <div class="recipe-card h-100">
+            <div class="recipe-card-img" style="background:linear-gradient(135deg,#fef9ec,#fde68a);">🧁</div>
+            <div class="recipe-card-body">
+              <div class="recipe-tag">Baking · Easy</div>
+              <h5>Wild Blueberry Scones</h5>
+              <p>Buttermilk scones folded with whole wild berries, lemon zest, and a demerara crust. Serve warm with clotted cream.</p>
+              <div class="recipe-time">⏱ 40 min · Serves 8</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 reveal">
+          <div class="recipe-card h-100">
+            <div class="recipe-card-img" style="background:linear-gradient(135deg,#ecfdf5,#a7f3d0);">🥗</div>
+            <div class="recipe-card-body">
+              <div class="recipe-tag">Salad · Summer</div>
+              <h5>Berry & Watercress Salad</h5>
+              <p>Peppery watercress, goats cheese, candied walnuts and a handful of wild blueberries in a honey-cider vinaigrette.</p>
+              <div class="recipe-time">⏱ 15 min · Serves 4</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 reveal">
+          <div class="recipe-card h-100">
+            <div class="recipe-card-img" style="background:linear-gradient(135deg,#eff6ff,#bfdbfe);">🥛</div>
+            <div class="recipe-card-body">
+              <div class="recipe-tag">Drink · Breakfast</div>
+              <h5>Wild Berry Kefir Smoothie</h5>
+              <p>Frozen wild blueberries blended with live kefir, banana, oat milk and a pinch of cardamom. Gut-friendly and genuinely delicious.</p>
+              <div class="recipe-time">⏱ 5 min · Serves 1</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 reveal">
+          <div class="recipe-card h-100">
+            <div class="recipe-card-img" style="background:linear-gradient(135deg,#fdf4ff,#f3e8ff);">🎂</div>
+            <div class="recipe-card-body">
+              <div class="recipe-tag">Dessert · Special</div>
+              <h5>Blueberry Pavlova</h5>
+              <p>Crisp meringue nest, softly whipped cream, and a compote of wild berries cooked down with a splash of crème de cassis.</p>
+              <div class="recipe-time">⏱ 2 hr · Serves 8</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 reveal">
+          <div class="recipe-card h-100">
+            <div class="recipe-card-img" style="background:linear-gradient(135deg,#fff7ed,#fed7aa);">🍳</div>
+            <div class="recipe-card-body">
+              <div class="recipe-tag">Breakfast · Weekend</div>
+              <h5>Sourdough Pancakes</h5>
+              <p>Overnight sourdough batter cooked low and slow, served with a warm wild blueberry and vanilla maple syrup.</p>
+              <div class="recipe-time">⏱ 25 min · Serves 2</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 reveal">
+          <div class="recipe-card h-100">
+            <div class="recipe-card-img" style="background:linear-gradient(135deg,#f0fdf4,#bbf7d0);">🍶</div>
+            <div class="recipe-card-body">
+              <div class="recipe-tag">Preserve · Autumn</div>
+              <h5>Spiced Berry Shrub</h5>
+              <p>A drinking vinegar of wild blueberries, apple cider vinegar, cardamom, and raw cane sugar. Dilute with sparkling water.</p>
+              <div class="recipe-time">⏱ 3 days · Makes 500ml</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="p3-zigzag"></div>
+
+    <!-- Farm features split -->
+    <div class="p3-farm-split">
+      <div class="container-fluid px-0">
+        <div class="row g-0">
+          <div class="col-lg-5 d-flex align-items-center justify-content-center p-5 reveal-left">
+            <div style="text-align:center;">
+              <div style="font-size:min(28vw,240px);line-height:1;filter:drop-shadow(0 10px 30px rgba(40,80,20,0.2));">🌿</div>
+              <p class="p3-eyebrow" style="margin-top:1.5rem;">Certified Organic Since 1982</p>
+            </div>
+          </div>
+          <div class="col-lg-7 p-5 reveal-right">
+            <p class="p3-section-tag">Our Farming Practices</p>
+            <h2 class="p3-section-title" style="margin-bottom:0.5rem;">Growing the right way</h2>
+            <p class="p3-section-sub">No shortcuts. No compromises. Just good farming.</p>
+            <div class="p3-farm-pill">
+              <span class="icon">🌧️</span>
+              <div>
+                <h6>Rainwater Only Irrigation</h6>
+                <p>Our fields are fed entirely by Atlantic rainfall collected in natural reservoirs. We never draw from aquifers or mains supply.</p>
+              </div>
+            </div>
+            <div class="p3-farm-pill">
+              <span class="icon">🐝</span>
+              <div>
+                <h6>On-Site Apiary Programme</h6>
+                <p>Twelve hives of native black bees live on the farm year-round, pollinating at exactly the right moment and producing their own wildflower honey.</p>
+              </div>
+            </div>
+            <div class="p3-farm-pill">
+              <span class="icon">🌱</span>
+              <div>
+                <h6>Cover Crop Rotation</h6>
+                <p>Every third row rests under legume cover crops, fixing nitrogen and rebuilding soil structure without a single bag of synthetic fertiliser.</p>
+              </div>
+            </div>
+            <div class="p3-farm-pill">
+              <span class="icon">♻️</span>
+              <div>
+                <h6>Zero-Waste Packaging</h6>
+                <p>All punnets are moulded from pressed blueberry pulp — a byproduct of our juice pressing — compostable in a home bin within 12 weeks.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Testimonials -->
+    <section class="p3-section">
+      <p class="p3-section-tag">What People Say</p>
+      <h2 class="p3-section-title">Heard from the field</h2>
+      <div class="row g-4">
+        <div class="col-md-6 reveal">
+          <div class="p3-testimonial">
+            <p>"I've been cooking professionally for eighteen years and these are the only blueberries I'll use for plated desserts. The flavour depth is simply not available anywhere else."</p>
+            <div class="reviewer">— Siobhan Tully, Head Pastry Chef · The Tasting Room, Dublin</div>
+          </div>
+          <div class="p3-testimonial">
+            <p>"As a nutritionist I recommend Blussom to every client who'll listen. The anthocyanin content in their wild berries consistently tests higher than any commercial variety I've seen."</p>
+            <div class="reviewer">— Dr. Aoife Brennan, Registered Nutritionist</div>
+          </div>
+        </div>
+        <div class="col-md-6 reveal">
+          <div class="p3-testimonial">
+            <p>"My children now refuse supermarket blueberries entirely. I consider this both a triumph and an expensive problem. Worth every penny."</p>
+            <div class="reviewer">— Fionnuala McCarthy, Customer · Cork</div>
+          </div>
+          <div class="p3-testimonial">
+            <p>"The subscription box has become the one thing my household will not cancel. When the seasonal punnet arrives it genuinely feels like an event."</p>
+            <div class="reviewer">— Ciarán Walsh, Customer · Galway</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="p3-footer">
+      <div class="brand">BLUSSOM</div>
+      <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:0.68rem;letter-spacing:0.35em;text-transform:uppercase;color:#3a6020;margin-top:0.3rem;">WILD FIELD EDITION</div>
+      <p>© 2026 Blussom · Rooted in the field · All rights reserved</p>
+    </footer>
+  </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// ── NAVIGATION ──────────────────────────────────────
+const nav = document.getElementById('gnav');
+const themeMap = { home:'theme-1', harvest:'theme-2', wild:'theme-3' };
+
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    a.classList.toggle('active', a.dataset.page === name);
+  });
+  const el = document.getElementById('page-' + name);
+  if (el) { el.classList.add('active'); window.scrollTo(0, 0); }
+  // nav theme
+  nav.className = 'theme-' + { home:'1', harvest:'2', wild:'3' }[name];
+  triggerReveal();
+}
+
+document.querySelectorAll('.nav-links a').forEach(a => {
+  a.addEventListener('click', e => { e.preventDefault(); showPage(a.dataset.page); });
+});
+function navTo(e, page) { e.preventDefault(); showPage(page); }
+
+// ── SCROLL REVEAL ────────────────────────────────────
+function triggerReveal() {
+  setTimeout(() => {
+    const sel = '.page.active .reveal, .page.active .reveal-left, .page.active .reveal-right';
+    const items = document.querySelectorAll(sel);
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(en => { if (en.isIntersecting) en.target.classList.add('visible'); });
+    }, { threshold: 0.12 });
+    items.forEach(el => { el.classList.remove('visible'); obs.observe(el); });
+  }, 60);
+}
+triggerReveal();
+
+// ── STAR FIELD (Page 2) ─────────────────────────────
+(function() {
+  const field = document.getElementById('star-field');
+  for (let i = 0; i < 120; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2.5 + 0.5;
+    s.style.cssText = `
+      width:${size}px; height:${size}px;
+      left:${Math.random()*100}%; top:${Math.random()*100}%;
+      animation-duration:${Math.random()*4+2}s;
+      animation-delay:${Math.random()*5}s;
+    `;
+    field.appendChild(s);
+  }
+})();
+
+// ── MARQUEE (Page 2) ────────────────────────────────
+(function() {
+  const items = [
+    'Highland Grown', '✦', 'Night Harvested', '✦',
+    'Zero Synthetic Spray', '✦', 'Cold Chain 72h', '✦',
+    'Anthocyanin Rich', '✦', 'Altitude Selected', '✦',
+    'Single Origin', '✦', 'Sixth Generation', '✦',
+  ];
+  const track = document.getElementById('marquee-track');
+  if (!track) return;
+  // duplicate for seamless loop
+  const html = [...items, ...items].map(t =>
+    t === '✦'
+      ? `<span class="p2-marquee-item"><span>✦</span></span>`
+      : `<span class="p2-marquee-item">${t}</span>`
+  ).join('');
+  track.innerHTML = html;
+})();
+
+// ── POWER BARS ANIMATE ON SHOW ──────────────────────
+// (none on this site but kept for extension)
+</script>
+</body>
+</html>
